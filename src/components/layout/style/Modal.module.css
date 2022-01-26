@@ -1,0 +1,24 @@
+.modal__links {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 10px;
+    width: 100%;
+    align-items: center;
+    background-color: whitesmoke;
+}
+
+.modal__item {
+    display: inline-block;
+}
+
+.modal__button {
+    line-height: 22px;
+    letter-spacing: -0.41px;
+}
+
+.modal__button:hover {
+    background-color: rgb(201, 193, 193);
+}

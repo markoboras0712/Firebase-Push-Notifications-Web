@@ -1,0 +1,28 @@
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: auto;
+
+}
+
+.horizontal_line {
+    opacity: 0.1;
+    border: 1px solid #000000;
+}
+
+.message__date {
+    display: flex;
+    align-content: center;
+    align-self: center;
+    justify-content: center;
+    margin-top: 8px;
+    font-size: 10px;
+    line-height: 16px;
+    text-align: center;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #969696;
+}

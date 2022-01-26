@@ -1,0 +1,37 @@
+.contact {
+    background-color: white;
+    color: #242424;
+    padding: 8px 16px 8px 16px;
+    transition: 1s;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    text-decoration: none;
+}
+
+.contact__avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.contact__userName {
+    padding-top: 9px;
+    padding-left: 11px;
+
+    font-weight: 500;
+
+    line-height: 22px;
+
+    letter-spacing: -0.4px;
+
+    color: #000000;
+}
+
+.contact__shape {
+    margin-left: auto;
+}
+
+.link {
+    text-decoration: none;
+}

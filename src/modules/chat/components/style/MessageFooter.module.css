@@ -1,0 +1,37 @@
+/*FOOTER*/
+.sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+}
+.footer {
+    background-color: white;
+    padding: 19px 20px 20px 20px;
+    display: flex;
+    flex-direction: row;
+    color: #242424;
+    height: 63px;
+}
+
+.footer__smiley {
+    cursor: not-allowed;
+}
+
+.footer__input {
+    width: 100%;
+    padding-left: 18px;
+    line-height: 22px;
+    letter-spacing: -0.41px;
+    margin-right: 1px;
+    border: none !important;
+    border-radius: 10px;
+}
+
+.footer__imgbuttons:disabled {
+    cursor: not-allowed;
+}
+
+.horizontal_line {
+    opacity: 0.1;
+    border: 1px solid #000000;
+}

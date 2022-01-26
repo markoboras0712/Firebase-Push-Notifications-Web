@@ -1,0 +1,58 @@
+.header {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+}
+
+.header__content {
+    display: flex;
+    flex-direction: row;
+}
+
+.header__avatar {
+    vertical-align: middle;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.header__chats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 30px;
+    line-height: 38px;
+    letter-spacing: 0.4px;
+    color: #000000;
+    padding-left: 12px;
+}
+
+.header__dots {
+    margin-left: auto;
+}
+
+.header__search {
+    margin-top: 16px;
+    display: flex;
+}
+
+.header__searchbar {
+    height: 36px;
+    flex: 1;
+    line-height: 22px;
+    letter-spacing: -0.41px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    border: none !important;
+    color: #8e8e93;
+    background-image: url('/src/assets/searchIcon.svg');
+    background-repeat: no-repeat;
+    background-position: left 8px center;
+    padding-left: 30px;
+}
+
+.header__modal {
+    width: 112px;
+    border: 2px solid green;
+}

@@ -1,0 +1,15 @@
+{
+  "tabWidth": 4,
+  "singleQuote": true,
+  "prettier.jsxBracketSameLine": true,
+  "trailingComma": "all",
+  "endOfLine": "auto",
+  "overrides": [
+    {
+      "files": ["*.js", "*.tsx", "*.ts", "*.json", "*.yml", ".prettierrc", "*.gql"],
+      "options": {
+        "tabWidth": 2
+      }
+    }
+  ]
+}
