@@ -32,7 +32,6 @@ export const createNewChat = createAsyncThunk(
       });
       dispatch(updateUserChats(message.uid));
     } catch (error) {
-      alert(error);
       throw new Error('didnt send message');
     }
   },

@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AllUsers, User } from 'modules/users';
 import { fetchInboxUsers } from 'modules/users/redux/usersActions';
 
-const initialState: AllUsers = {
+export const initialState: AllUsers = {
   allUsers: [],
   inboxUsers: [],
   keyword: '',

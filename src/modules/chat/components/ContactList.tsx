@@ -5,6 +5,7 @@ import {
   selectUserActiveChats,
 } from 'modules/authentication';
 import { Contact } from 'modules/chat';
+import { accessRegistrationToken } from 'modules/redux-store/messaging';
 import { fetchUsers, useUsers } from 'modules/users';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,6 +19,11 @@ export const ContactList: React.FC = () => {
 
   useEffect(() => {
     dispatch(fetchUsers(user.id));
+  }, []);
+
+  let tokenData;
+  useEffect(() => {
+    tokenData = accessRegistrationToken();
   }, []);
 
   return (

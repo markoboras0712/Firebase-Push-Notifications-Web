@@ -37,6 +37,7 @@ export const SignUp: React.FC = () => {
   const onSubmit = handleSubmit((data: Register) => {
     if (uploadedImage === undefined) {
       alert('Upload picture');
+      return;
     }
     registerWithEmailPassword({ ...data, photoUrl: uploadedImage });
   });

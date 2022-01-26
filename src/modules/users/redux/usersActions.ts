@@ -18,6 +18,7 @@ export const fetchUsers = createAsyncThunk('fetchUsers', async (id: string) => {
     }));
     return allUsers;
   } catch (error) {
+    console.log(error);
     throw new Error('didnt fetch data');
   }
 });
@@ -40,6 +41,7 @@ export const fetchInboxUsers = createAsyncThunk(
       }));
       return inboxUsers.filter((user) => user.uid !== id);
     } catch (error) {
+      console.log(error);
       throw new Error('didnt fetch data');
     }
   },

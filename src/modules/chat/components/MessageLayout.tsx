@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import classes from './style/MessageLayout.module.css';
 import {
   MessageHeader,
