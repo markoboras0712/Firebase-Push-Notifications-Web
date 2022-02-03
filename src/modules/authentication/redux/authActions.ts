@@ -91,19 +91,24 @@ export const signInWithGoogle = createAsyncThunk(
       const { user } = await signInWithPopup(auth, provider);
       const q = query(collection(db, 'users'), where('id', '==', user.uid));
       const querySnapshot = await getDocs(q);
-      accessRegistrationToken().then((result) => {
-        const authUser: AuthData = {
-          email: user.email,
-          id: user.uid,
-          photoUrl: user.photoURL,
-          activeChats: [],
-          displayName: user.displayName,
-          fcmToken: result,
-        };
-        if (!querySnapshot.docs.length) {
-          dispatch(addUserToFirestore(authUser));
-        }
-      });
+      accessRegistrationToken()
+        .then((result) => {
+          console.log('RESULT', result);
+          const authUser: AuthData = {
+            email: user.email,
+            id: user.uid,
+            photoUrl: user.photoURL,
+            activeChats: [],
+            displayName: user.displayName,
+            fcmToken: result,
+          };
+          if (!querySnapshot.docs.length) {
+            dispatch(addUserToFirestore(authUser));
+          }
+        })
+        .catch((err) => {
+          console.log('ERR', err);
+        });
     } catch (err) {
       alert(err);
       throw new Error('Didnt sign in');
@@ -124,6 +129,7 @@ export const signUpWithEmailPassword = createAsyncThunk(
         password,
       );
       accessRegistrationToken().then((result) => {
+        console.log('HERE', result);
         dispatch(
           addUserToFirestore({
             displayName: `${firstName} ${lastName}`,

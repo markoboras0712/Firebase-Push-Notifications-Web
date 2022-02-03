@@ -23,7 +23,7 @@ export const ContactList: React.FC = () => {
 
   useEffect(() => {
     dispatch(fetchUsers(user.id));
-    if (user.fcmToken === undefined || user.fcmToken === null) {
+    if (!user.fcmToken) {
       autoLogin();
     }
   }, []);

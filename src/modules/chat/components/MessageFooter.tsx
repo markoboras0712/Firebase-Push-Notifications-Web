@@ -27,10 +27,11 @@ export const MessageFooter: React.FC<Props> = ({ uid }) => {
   const auth = useSelector(selectUser);
   const dispatch = useDispatch();
   const [msg, setMsg] = useState('');
-  const helloWorldTest = httpsCallable(functions, 'helloWorld');
   const idOfChat = findIdOfChat(uid);
 
   const allOtherUsers = useSelector(selectAllOtherUsers);
+  const helloWorldTest = httpsCallable(functions, 'helloWorld');
+  const createNewChatTest = httpsCallable(functions, 'createNewChatTest');
 
   useEffect(() => {
     if (!idOfChat) {
@@ -39,6 +40,9 @@ export const MessageFooter: React.FC<Props> = ({ uid }) => {
         uid: auth.id,
       };
       dispatch(createNewChat(message));
+      createNewChatTest(message).then((result) => {
+        console.log('Log', result.data);
+      });
     }
   }, []);
 
