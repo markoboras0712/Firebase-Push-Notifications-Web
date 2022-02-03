@@ -3,7 +3,7 @@ import { firebaseApp } from 'modules/redux-store';
 
 export const messaging = getMessaging(firebaseApp);
 export const publicKey =
-  'BOPzykU9w5EIiXuD1EbHvXAg75FWkjYIznNVwYJbGKfem69eNoJBX7KOgF9Zq1WO9WrTHRJNfeNo8YcDKNxH9SA';
+  'BBmJMhj9WtYfhTZvsT2I2x3H-NgHnRY-usJyxBnJ2OvDae9MXABrJS2WbdQ6nloeagtAxo3xy5s8ttYMXQn5dFs';
 
 export const accessRegistrationToken = async () => {
   try {

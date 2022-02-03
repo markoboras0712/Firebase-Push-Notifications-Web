@@ -12,7 +12,7 @@ import {
 import { useEffect, useState } from 'react';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUser } from 'modules/authentication';
+import { selectUser, updateUserChats } from 'modules/authentication';
 import { httpsCallable } from 'firebase/functions';
 import { functions } from 'modules/redux-store';
 import { accessRegistrationToken } from 'modules/redux-store/messaging';
@@ -30,7 +30,7 @@ export const MessageFooter: React.FC<Props> = ({ uid }) => {
   const idOfChat = findIdOfChat(uid);
 
   const allOtherUsers = useSelector(selectAllOtherUsers);
-  const helloWorldTest = httpsCallable(functions, 'helloWorld');
+  const sendMessageTest = httpsCallable(functions, 'sendMessage');
   const createNewChatTest = httpsCallable(functions, 'createNewChatTest');
 
   useEffect(() => {
@@ -39,9 +39,11 @@ export const MessageFooter: React.FC<Props> = ({ uid }) => {
         to: uid,
         uid: auth.id,
       };
-      dispatch(createNewChat(message));
+      // dispatch(createNewChat(message));
+
       createNewChatTest(message).then((result) => {
-        console.log('Log', result.data);
+        console.log('Log clienta', result.data);
+        dispatch(updateUserChats(message.uid));
       });
     }
   }, []);
@@ -54,8 +56,6 @@ export const MessageFooter: React.FC<Props> = ({ uid }) => {
       uid: auth.id,
       subCollection: idOfChat,
     };
-    dispatch(sendNewMessage(message));
-    const token = await accessRegistrationToken();
     const otherUserFcmTokenTest = allOtherUsers.find(
       (user) => user.uid === uid,
     );
@@ -65,14 +65,14 @@ export const MessageFooter: React.FC<Props> = ({ uid }) => {
       to: uid,
       uid: auth.id,
       subCollection: idOfChat,
-      fcmToken: token,
+      fcmToken: auth.fcmToken,
       otherUserFcmToken: otherUserFcmTokenTest?.fcmToken,
       displayName: auth.displayName,
     };
 
-    console.log('Token test FCM', token);
+    console.log('Token test FCM', auth.fcmToken);
     console.log('Test message frontend', testMessage);
-    helloWorldTest(testMessage).then((result) => {
+    sendMessageTest(testMessage).then((result) => {
       console.log('Log', result.data);
     });
     setMsg('');

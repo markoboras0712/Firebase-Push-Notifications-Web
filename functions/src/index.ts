@@ -8,8 +8,8 @@ admin.initializeApp({
 });
 
 const cors = require('cors')({ origin: 'http://localhost:3000' });
-//
-exports.helloWorld = functions.https.onRequest((request, response) => {
+
+exports.sendMessage = functions.https.onRequest((request, response) => {
   cors(request, response, async () => {
     response.header('Access-Control-Allow-Origin', '*');
     console.log('Request body', request.body);
@@ -26,6 +26,19 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
     };
     console.log('sending payload cloud function', payload);
     try {
+      const subCollectionRef = await admin
+        .firestore()
+        .collection('messages')
+        .doc(request.body.data.subCollection)
+        .collection('messages')
+        .add({
+          createdAt: new Date(Date.now()),
+          text: request.body.data.text,
+          uid: request.body.data.uid,
+          to: request.body.data.to,
+        });
+      console.log('sub collection ref cloud funkcija', subCollectionRef);
+
       const res = await admin.messaging().send(payload);
       response.send({
         status: 200,
@@ -44,51 +57,27 @@ exports.createNewChatTest = functions.https.onRequest((request, response) => {
     console.log('Request body', request.body);
     try {
       const chatRef = await admin.firestore().collection('messages').add({});
-      const db = admin.firestore();
-      console.log('chat ref cloud functions', chatRef.id);
-      await admin
-        .firestore()
-        .collection('messages')
-        .doc(chatRef.id)
-        .collection('messages')
-        .add({});
+
       const userChatRef = admin
         .firestore()
         .collection('users')
         .doc(request.body.data.uid);
-      console.log('userChatRef', userChatRef);
-
-      userChatRef.update({
-        activeChats: firebase.firestore.FieldValue.arrayUnion(chatRef.id),
+      await userChatRef.update({
+        activeChats: admin.firestore.FieldValue.arrayUnion(chatRef.id),
       });
+
       const receiverChatRef = admin
         .firestore()
         .collection('users')
         .doc(request.body.data.to);
-      receiverChatRef.update({
-        activeChats: firebase.firestore.FieldValue.arrayUnion(chatRef.id),
+      await receiverChatRef.update({
+        activeChats: admin.firestore.FieldValue.arrayUnion(chatRef.id),
       });
+      const userData = await userChatRef.get();
+      console.log('user data cloud backend', userData.data());
+      response.send({ data: userData.data() });
     } catch (error) {
       console.log(error);
     }
   });
 });
-
-/*export const createNewChat = createAsyncThunk(
-  'createNewChat',
-  async (message: Message, { dispatch }) => {
-    try {
-      const chatRef = await addDoc(collection(db, 'messages'), {});
-      await addDoc(collection(db, 'messages', chatRef.id, 'messages'), {});
-      await updateDoc(doc(db, 'users', message.uid), {
-        activeChats: arrayUnion(chatRef.id),
-      });
-      await updateDoc(doc(db, 'users', message.to), {
-        activeChats: arrayUnion(chatRef.id),
-      });
-      dispatch(updateUserChats(message.uid));
-    } catch (error) {
-      throw new Error('didnt send message');
-    }
-  },
-);*/
