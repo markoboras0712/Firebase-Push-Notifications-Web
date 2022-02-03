@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import classes from './style/MessageFooter.module.css';
 import { ReactComponent as Smiley } from 'assets/smiley.svg';
 import { ReactComponent as Buttons } from 'assets/imgupload.svg';
@@ -12,6 +13,9 @@ import { useEffect, useState } from 'react';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from 'modules/authentication';
+import { httpsCallable } from 'firebase/functions';
+import { functions } from 'modules/redux-store';
+import { accessRegistrationToken } from 'modules/redux-store/messaging';
 
 interface Props {
   uid: string;
@@ -22,6 +26,7 @@ export const MessageFooter: React.FC<Props> = ({ uid }) => {
   const auth = useSelector(selectUser);
   const dispatch = useDispatch();
   const [msg, setMsg] = useState('');
+  const helloWorldTest = httpsCallable(functions, 'helloWorld');
   const idOfChat = findIdOfChat(uid);
 
   useEffect(() => {
@@ -34,7 +39,7 @@ export const MessageFooter: React.FC<Props> = ({ uid }) => {
     }
   }, []);
 
-  const sendMessage = (event: React.FormEvent) => {
+  const sendMessage = async (event: React.FormEvent) => {
     event.preventDefault();
     const message: Message = {
       text: msg,
@@ -43,6 +48,20 @@ export const MessageFooter: React.FC<Props> = ({ uid }) => {
       subCollection: idOfChat,
     };
     dispatch(sendNewMessage(message));
+    const token = await accessRegistrationToken();
+    const testMessage = {
+      text: msg,
+      to: uid,
+      uid: auth.id,
+      subCollection: idOfChat,
+      fcmToken: token,
+      displayName: auth.displayName,
+    };
+
+    console.log('Token test FCM', token);
+    helloWorldTest(testMessage).then((result) => {
+      console.log('Log', result.data);
+    });
     setMsg('');
   };
 

@@ -1,4 +1,4 @@
-import { getMessaging, getToken } from 'firebase/messaging';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 
 export const messaging = getMessaging();
 export const publicKey =
@@ -7,9 +7,15 @@ export const publicKey =
 export const accessRegistrationToken = async () => {
   try {
     const currentToken = await getToken(messaging, { vapidKey: publicKey });
+
     console.log('Current token', currentToken);
     return currentToken;
   } catch (error) {
     console.log(error);
   }
 };
+
+onMessage(messaging, (payload) => {
+  console.log('Message received. ', payload);
+  // ...
+});

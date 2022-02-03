@@ -76,7 +76,6 @@ export const setMessagesListener =
               createdAt: doc.data().createdAt.toDate(),
             } as Message),
         );
-        console.log('messages', messages);
         dispatch(fetchMessagesFulfilled(messages));
       });
       return unsubscribe;

@@ -6,6 +6,7 @@ export interface AuthData {
   email: string | null;
   photoUrl: string | null;
   activeChats?: string[];
+  fcmToken?: string;
 }
 
 export class AuthData {

@@ -24,6 +24,7 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { Routes } from 'fixtures';
 import { Register, Login, AuthData } from 'modules/authentication';
 import { auth, db, provider, storage } from 'modules/redux-store';
+import { accessRegistrationToken } from 'modules/redux-store/messaging';
 import { fetchInboxUsers, fetchUsers } from 'modules/users';
 
 export const getUser = createAsyncThunk(
@@ -90,16 +91,19 @@ export const signInWithGoogle = createAsyncThunk(
       const { user } = await signInWithPopup(auth, provider);
       const q = query(collection(db, 'users'), where('id', '==', user.uid));
       const querySnapshot = await getDocs(q);
-      const authUser: AuthData = {
-        email: user.email,
-        id: user.uid,
-        photoUrl: user.photoURL,
-        activeChats: [],
-        displayName: user.displayName,
-      };
-      if (!querySnapshot.docs.length) {
-        dispatch(addUserToFirestore(authUser));
-      }
+      accessRegistrationToken().then((result) => {
+        const authUser: AuthData = {
+          email: user.email,
+          id: user.uid,
+          photoUrl: user.photoURL,
+          activeChats: [],
+          displayName: user.displayName,
+          fcmToken: result,
+        };
+        if (!querySnapshot.docs.length) {
+          dispatch(addUserToFirestore(authUser));
+        }
+      });
     } catch (err) {
       alert(err);
       throw new Error('Didnt sign in');
@@ -119,15 +123,18 @@ export const signUpWithEmailPassword = createAsyncThunk(
         email,
         password,
       );
-      dispatch(
-        addUserToFirestore({
-          displayName: `${firstName} ${lastName}`,
-          email,
-          id: response.user.uid,
-          activeChats: [],
-          photoUrl: photoUrl as string,
-        }),
-      );
+      accessRegistrationToken().then((result) => {
+        dispatch(
+          addUserToFirestore({
+            displayName: `${firstName} ${lastName}`,
+            email,
+            id: response.user.uid,
+            activeChats: [],
+            photoUrl: photoUrl as string,
+            fcmToken: result,
+          }),
+        );
+      });
     } catch (error) {
       alert(error);
       throw new Error('Didng signup');
