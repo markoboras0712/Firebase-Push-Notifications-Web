@@ -45,6 +45,7 @@ export const useAuthentication = () => {
   const autoLogin = () => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        // console.log('User autologin method', user);
         dispatch(getUser(user));
         dispatch(saveUser(user));
       }

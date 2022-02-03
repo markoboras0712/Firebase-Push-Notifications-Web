@@ -16,6 +16,7 @@ import { selectUser } from 'modules/authentication';
 import { httpsCallable } from 'firebase/functions';
 import { functions } from 'modules/redux-store';
 import { accessRegistrationToken } from 'modules/redux-store/messaging';
+import { selectAllOtherUsers } from 'modules/users';
 
 interface Props {
   uid: string;
@@ -28,6 +29,8 @@ export const MessageFooter: React.FC<Props> = ({ uid }) => {
   const [msg, setMsg] = useState('');
   const helloWorldTest = httpsCallable(functions, 'helloWorld');
   const idOfChat = findIdOfChat(uid);
+
+  const allOtherUsers = useSelector(selectAllOtherUsers);
 
   useEffect(() => {
     if (!idOfChat) {
@@ -49,16 +52,22 @@ export const MessageFooter: React.FC<Props> = ({ uid }) => {
     };
     dispatch(sendNewMessage(message));
     const token = await accessRegistrationToken();
+    const otherUserFcmTokenTest = allOtherUsers.find(
+      (user) => user.uid === uid,
+    );
+    console.log('Other user test', otherUserFcmTokenTest?.fcmToken);
     const testMessage = {
       text: msg,
       to: uid,
       uid: auth.id,
       subCollection: idOfChat,
       fcmToken: token,
+      otherUserFcmToken: otherUserFcmTokenTest?.fcmToken,
       displayName: auth.displayName,
     };
 
     console.log('Token test FCM', token);
+    console.log('Test message frontend', testMessage);
     helloWorldTest(testMessage).then((result) => {
       console.log('Log', result.data);
     });

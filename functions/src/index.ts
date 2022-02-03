@@ -5,30 +5,25 @@ const serviceAccount = require('../mboras-cloud-messaging-firebase-adminsdk-3crg
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
+  projectId: 'mboras-cloud-messaging',
 });
 
 const cors = require('cors')({ origin: 'http://localhost:3000' });
 //
 exports.helloWorld = functions.https.onRequest((request, response) => {
   cors(request, response, async () => {
-    response.header('Access-Control-Allow-Origin', 'http://localhost:3000/');
-    response.header(
-      'Access-Control-Allow-Headers',
-      'Origin, X-Requested-With, Content-Type, Accept',
-    );
+    response.header('Access-Control-Allow-Origin', '*');
     console.log('Request body', request.body);
-    const registrationToken = request.body.data.fcmToken;
-
     // const FCMToken = admin.database().ref(`/FCMTokens/${userId}`).once('value');
-    const FCMTokenTest = await admin
-      .firestore()
-      .collection('users')
-      .doc(request.body.data.to)
-      .get();
-    console.log('fcm test od usera', FCMTokenTest.data().fcmToken);
+    // const FCMTokenTest = await admin
+    //   .firestore()
+    //   .collection('users')
+    //   .doc(request.body.data.to)
+    //   .get();
+    // console.log('fcm test od usera', FCMTokenTest.data().fcmToken);
 
     const payload = {
-      token: FCMTokenTest.data().fcmToken,
+      token: request.body.data.otherUserFcmToken,
       notification: {
         title: request.body.data.displayName,
         body: request.body.data.text,
@@ -37,11 +32,13 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
         body: request.body.data.text,
       },
     };
-    console.log('testcina s service accountom fcm token', registrationToken);
     console.log('sending payload cloud function', payload);
     try {
       const res = await admin.messaging().send(payload);
-      response.status(200).send(res);
+      response.send({
+        status: 200,
+        data: res,
+      });
       console.log('Responseeee fcm', res);
     } catch (error) {
       console.log('errrocina', error);

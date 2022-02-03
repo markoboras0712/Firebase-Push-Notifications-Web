@@ -12,8 +12,6 @@ import {
   getAuth,
   GoogleAuthProvider,
 } from 'firebase/auth';
-import { messaging } from 'modules/redux-store/messaging';
-import { onMessage } from 'firebase/messaging';
 
 export const firebaseApp = initializeApp({
   apiKey: 'AIzaSyDjZhdmZn2fVuA3wZoF-73f3NwzkJdgNfM',

@@ -4,6 +4,7 @@ export interface User {
   userName: string;
   userPhoto: string;
   activeChats: string[];
+  fcmToken?: string;
 }
 
 export interface AllUsers {

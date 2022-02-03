@@ -15,6 +15,7 @@ export const fetchUsers = createAsyncThunk('fetchUsers', async (id: string) => {
       userName: res.data().displayName,
       userPhoto: res.data().photoUrl,
       activeChats: res.data().activeChats,
+      fcmToken: res.data().fcmToken,
     }));
     return allUsers;
   } catch (error) {
