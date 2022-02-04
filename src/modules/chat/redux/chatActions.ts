@@ -79,6 +79,12 @@ export const setMessagesListener =
         dispatch(fetchMessagesFulfilled(messages));
       });
       return unsubscribe;
+      /* const getMessagesTest = httpsCallable(functions, 'getMessagesTest');
+      dispatch(fetchMessagesPending());
+      getMessagesTest(id).then((result) => {
+        console.log('Log clienta', result.data);
+        dispatch(fetchMessagesFulfilled(result.data as Message[]));
+      }); */
     } catch (error) {
       dispatch(fetchMessagesRejected(error));
     }

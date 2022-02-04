@@ -26,17 +26,17 @@ exports.sendMessage = functions.https.onRequest((request, response) => {
     };
     console.log('sending payload cloud function', payload);
     try {
-      const subCollectionRef = await admin
-        .firestore()
-        .collection('messages')
-        .doc(request.body.data.subCollection)
-        .collection('messages')
-        .add({
-          createdAt: new Date(Date.now()),
-          text: request.body.data.text,
-          uid: request.body.data.uid,
-          to: request.body.data.to,
-        });
+      // const subCollectionRef = await admin
+      //   .firestore()
+      //   .collection('messages')
+      //   .doc(request.body.data.subCollection)
+      //   .collection('messages')
+      //   .add({
+      //     createdAt: new Date(Date.now()),
+      //     text: request.body.data.text,
+      //     uid: request.body.data.uid,
+      //     to: request.body.data.to,
+      //   });
 
       const res = await admin.messaging().send(payload);
       response.send({
@@ -50,66 +50,79 @@ exports.sendMessage = functions.https.onRequest((request, response) => {
   });
 });
 
-exports.createNewChatTest = functions.https.onRequest((request, response) => {
-  cors(request, response, async () => {
-    response.header('Access-Control-Allow-Origin', '*');
-    console.log('Request body', request.body);
-    try {
-      const chatRef = await admin.firestore().collection('messages').add({});
+// exports.createNewChatTest = functions.https.onRequest((request, response) => {
+//   cors(request, response, async () => {
+//     response.header('Access-Control-Allow-Origin', '*');
+//     console.log('Request body', request.body);
+//     try {
+//       const chatRef = await admin.firestore().collection('messages').add({});
 
-      const userChatRef = admin
-        .firestore()
-        .collection('users')
-        .doc(request.body.data.uid);
-      await userChatRef.update({
-        activeChats: admin.firestore.FieldValue.arrayUnion(chatRef.id),
-      });
+//       const userChatRef = admin
+//         .firestore()
+//         .collection('users')
+//         .doc(request.body.data.uid);
+//       await userChatRef.update({
+//         activeChats: admin.firestore.FieldValue.arrayUnion(chatRef.id),
+//       });
 
-      const receiverChatRef = admin
-        .firestore()
-        .collection('users')
-        .doc(request.body.data.to);
-      await receiverChatRef.update({
-        activeChats: admin.firestore.FieldValue.arrayUnion(chatRef.id),
-      });
-      const userData = await userChatRef.get();
-      console.log('user data cloud backend', userData.data());
-      response.send({ data: userData.data() });
-    } catch (error) {
-      console.log(error);
-    }
-  });
-});
+//       const receiverChatRef = admin
+//         .firestore()
+//         .collection('users')
+//         .doc(request.body.data.to);
+//       await receiverChatRef.update({
+//         activeChats: admin.firestore.FieldValue.arrayUnion(chatRef.id),
+//       });
+//       const userData = await userChatRef.get();
+//       console.log('user data cloud backend', userData.data());
+//       response.send({ data: userData.data() });
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   });
+// });
 
-exports.getMessagesTest = functions.https.onRequest((request, response) => {
-  cors(request, response, async () => {
-    response.header('Access-Control-Allow-Origin', '*');
-    console.log('Request body', request.body);
-    try {
-      const messagesRef = await admin
-        .firestore()
-        .collection('messages')
-        .doc(request.body.data)
-        .collection('messages')
-        .get();
-      console.log(
-        'data cloud functions of messages',
-        messagesRef.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-          createdAt: doc.data().createdAt.toDate(),
-        })),
-      );
+// exports.getMessagesTest = functions.https.onRequest((request, response) => {
+//   cors(request, response, async () => {
+//     response.header('Access-Control-Allow-Origin', '*');
+//     console.log('Request body', request.body);
+//     try {
+//       const unsub = admin
+//         .firestore()
+//         .collection('messages')
+//         .doc(request.body.data)
+//         .collection('messages')
+//         .onSnapshot((snapshot) => {
+//           console.log(
+//             'onSnapshot cloud functions',
+//             snapshot.docs.map((doc) => doc.data()),
+//           );
+//         });
+//       unsub();
 
-      response.send({
-        data: messagesRef.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-          createdAt: doc.data().createdAt.toDate(),
-        })),
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  });
-});
+//       const messagesRef = await admin
+//         .firestore()
+//         .collection('messages')
+//         .doc(request.body.data)
+//         .collection('messages')
+//         .get();
+//       console.log(
+//         'data cloud functions of messages',
+//         messagesRef.docs.map((doc) => ({
+//           ...doc.data(),
+//           id: doc.id,
+//           createdAt: doc.data().createdAt.toDate(),
+//         })),
+//       );
+
+//       response.send({
+//         data: messagesRef.docs.map((doc) => ({
+//           ...doc.data(),
+//           id: doc.id,
+//           createdAt: doc.data().createdAt.toDate(),
+//         })),
+//       });
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   });
+// });

@@ -39,12 +39,7 @@ export const MessageFooter: React.FC<Props> = ({ uid }) => {
         to: uid,
         uid: auth.id,
       };
-      // dispatch(createNewChat(message));
-
-      createNewChatTest(message).then((result) => {
-        console.log('Log clienta', result.data);
-        dispatch(updateUserChats(message.uid));
-      });
+      dispatch(createNewChat(message));
     }
   }, []);
 
