@@ -37,7 +37,6 @@ exports.sendMessage = functions.https.onRequest((request, response) => {
           uid: request.body.data.uid,
           to: request.body.data.to,
         });
-      console.log('sub collection ref cloud funkcija', subCollectionRef);
 
       const res = await admin.messaging().send(payload);
       response.send({
@@ -76,6 +75,39 @@ exports.createNewChatTest = functions.https.onRequest((request, response) => {
       const userData = await userChatRef.get();
       console.log('user data cloud backend', userData.data());
       response.send({ data: userData.data() });
+    } catch (error) {
+      console.log(error);
+    }
+  });
+});
+
+exports.getMessagesTest = functions.https.onRequest((request, response) => {
+  cors(request, response, async () => {
+    response.header('Access-Control-Allow-Origin', '*');
+    console.log('Request body', request.body);
+    try {
+      const messagesRef = await admin
+        .firestore()
+        .collection('messages')
+        .doc(request.body.data)
+        .collection('messages')
+        .get();
+      console.log(
+        'data cloud functions of messages',
+        messagesRef.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+          createdAt: doc.data().createdAt.toDate(),
+        })),
+      );
+
+      response.send({
+        data: messagesRef.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+          createdAt: doc.data().createdAt.toDate(),
+        })),
+      });
     } catch (error) {
       console.log(error);
     }

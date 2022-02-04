@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectUser, updateUserChats } from 'modules/authentication';
 import { httpsCallable } from 'firebase/functions';
 import { functions } from 'modules/redux-store';
-import { accessRegistrationToken } from 'modules/redux-store/messaging';
+
 import { selectAllOtherUsers } from 'modules/users';
 
 interface Props {

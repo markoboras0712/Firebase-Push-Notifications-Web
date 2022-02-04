@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useSelector } from 'react-redux';
 import classes from './style/MessageBody.module.css';
 import { selectUser } from 'modules/authentication';
@@ -46,9 +47,9 @@ export const MessageBody: React.FC<Props> = ({ messages }) => {
             }
             `}
           >
-            {createdAt?.getHours() +
+            {/* {(createdAt?.getHours() as number) +
               ':' +
-              ('0' + createdAt?.getMinutes()).slice(-2)}
+              ('0' + createdAt?.getMinutes()).slice(-2)} */}
           </p>
           <div ref={messagesEndRef}></div>
         </div>

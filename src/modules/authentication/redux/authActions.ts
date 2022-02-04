@@ -38,7 +38,9 @@ export const getUser = createAsyncThunk(
         if (!!userFromFirestore.activeChats)
           dispatch(fetchInboxUsers(userFromFirestore as AuthData));
         navigate(Routes.Contacts);
-        return userFromFirestore;
+        const fcmToken = await accessRegistrationToken();
+        console.log('RESULT', fcmToken);
+        return { ...userFromFirestore, fcmToken: fcmToken };
       }
       const authUser: AuthData = {
         email: user.email,
@@ -91,24 +93,20 @@ export const signInWithGoogle = createAsyncThunk(
       const { user } = await signInWithPopup(auth, provider);
       const q = query(collection(db, 'users'), where('id', '==', user.uid));
       const querySnapshot = await getDocs(q);
-      accessRegistrationToken()
-        .then((result) => {
-          console.log('RESULT', result);
-          const authUser: AuthData = {
-            email: user.email,
-            id: user.uid,
-            photoUrl: user.photoURL,
-            activeChats: [],
-            displayName: user.displayName,
-            fcmToken: result,
-          };
-          if (!querySnapshot.docs.length) {
-            dispatch(addUserToFirestore(authUser));
-          }
-        })
-        .catch((err) => {
-          console.log('ERR', err);
-        });
+      const fcmToken = await accessRegistrationToken();
+      console.log('RESULT', fcmToken);
+
+      const authUser: AuthData = {
+        email: user.email,
+        id: user.uid,
+        photoUrl: user.photoURL,
+        activeChats: [],
+        displayName: user.displayName,
+        fcmToken: fcmToken,
+      };
+      if (!querySnapshot.docs.length) {
+        dispatch(addUserToFirestore(authUser));
+      }
     } catch (err) {
       alert(err);
       throw new Error('Didnt sign in');

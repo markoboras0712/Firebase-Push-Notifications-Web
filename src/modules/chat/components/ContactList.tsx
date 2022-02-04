@@ -6,7 +6,7 @@ import {
   useAuthentication,
 } from 'modules/authentication';
 import { Contact } from 'modules/chat';
-import { accessRegistrationToken } from 'modules/redux-store/messaging';
+
 import { fetchUsers, useUsers } from 'modules/users';
 import { httpsCallable } from 'firebase/functions';
 import { functions } from 'modules/redux-store';
@@ -23,9 +23,9 @@ export const ContactList: React.FC = () => {
 
   useEffect(() => {
     dispatch(fetchUsers(user.id));
-    if (!user.fcmToken) {
-      autoLogin();
-    }
+    // if (!user.fcmToken) {
+    //   autoLogin();
+    // }
   }, []);
 
   return (

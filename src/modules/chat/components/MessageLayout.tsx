@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import classes from './style/MessageLayout.module.css';
 import {
   MessageHeader,
@@ -7,10 +8,15 @@ import {
   useMessages,
   selectAllMessages,
   clearMessages,
+  fetchMessagesFulfilled,
+  fetchMessagesPending,
+  Message,
 } from 'modules/chat';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from '@reach/router';
+import { httpsCallable } from 'firebase/functions';
+import { functions } from 'modules/redux-store';
 
 export const MessageLayout: React.FC = () => {
   const { getMessages, findIdOfChat } = useMessages();
@@ -19,13 +25,20 @@ export const MessageLayout: React.FC = () => {
   const idOfChat = findIdOfChat(layoutId);
   const dispatch = useDispatch();
 
-  const { maxDate, findUser } = useContact();
+  const { findUser } = useContact();
   const { userName, userPhoto } = findUser(layoutId);
   const messages = useSelector(selectAllMessages);
 
+  const getMessagesTest = httpsCallable(functions, 'getMessagesTest');
+
   useEffect(() => {
     if (idOfChat) {
-      getMessages(idOfChat);
+      // getMessages(idOfChat);
+      dispatch(fetchMessagesPending());
+      getMessagesTest(idOfChat).then((result) => {
+        console.log('Log clienta', result.data);
+        dispatch(fetchMessagesFulfilled(result.data as Message[]));
+      });
     }
     dispatch(clearMessages());
   }, [idOfChat]);
@@ -33,7 +46,6 @@ export const MessageLayout: React.FC = () => {
   return (
     <div className={classes.container}>
       <MessageHeader uid={layoutId} userName={userName} userPhoto={userPhoto} />
-      {maxDate && <p className={classes.message__date}>{maxDate}</p>}
       <MessageBody messages={messages} />
       <MessageFooter uid={layoutId} />
     </div>

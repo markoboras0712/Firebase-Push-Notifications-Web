@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useSelector } from 'react-redux';
 
 import { selectAllMessages } from 'modules/chat';
@@ -13,11 +14,11 @@ export const useContact = () => {
       : initialState.user;
   };
 
-  const allDates = messages.map(({ createdAt }) => createdAt as Date);
+  // const allDates = messages.map(({ createdAt }) => createdAt as Date);
 
-  const maxDate = !!allDates.length
-    ? allDates.reduce((a, b) => (a > b ? a : b)).toLocaleDateString()
-    : '';
+  // const maxDate = !!allDates.length
+  //   ? allDates.reduce((a, b) => (a > b ? a : b)).toLocaleDateString()
+  //   : '';
 
-  return { maxDate, findUser };
+  return { findUser };
 };
