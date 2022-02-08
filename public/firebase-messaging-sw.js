@@ -16,11 +16,17 @@ firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
 
+const savedMessageId = '';
 messaging.onBackgroundMessage(function (payload) {
   console.log('Received background message ', payload);
+  if (savedMessageId === payload.data.body) {
+    savedMessageId = payload.data.body;
+  } else {
+    return;
+  }
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
-    body: payload.notification.body,
+    body: savedMessageId,
     icon: '/logo192.png',
   };
   return self.registration.showNotification(
