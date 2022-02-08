@@ -15,8 +15,9 @@ import {
   Message,
 } from 'modules/chat';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { AppDispatch, AppThunk, db } from 'modules/redux-store';
+import { AppDispatch, AppThunk, db, functions } from 'modules/redux-store';
 import { updateUserChats } from 'modules/authentication';
+import { httpsCallable } from 'firebase/functions';
 
 export const createNewChat = createAsyncThunk(
   'createNewChat',
@@ -40,6 +41,10 @@ export const createNewChat = createAsyncThunk(
 export const sendNewMessage = createAsyncThunk(
   'sendNewMessage',
   async (message: Message) => {
+    const sendPushNotification = httpsCallable(
+      functions,
+      'sendPushNotification',
+    );
     try {
       const subCollectionRef = collection(
         db,
@@ -53,6 +58,7 @@ export const sendNewMessage = createAsyncThunk(
         uid: message.uid,
         to: message.to,
       });
+      await sendPushNotification(message);
     } catch (error) {
       alert(error);
       throw new Error('didnt send message');

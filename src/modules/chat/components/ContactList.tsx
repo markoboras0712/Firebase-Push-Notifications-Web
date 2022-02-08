@@ -19,13 +19,9 @@ export const ContactList: React.FC = () => {
   const { filteredContacts } = useUsers();
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
-  const { autoLogin } = useAuthentication();
 
   useEffect(() => {
     dispatch(fetchUsers(user.id));
-    // if (!user.fcmToken) {
-    //   autoLogin();
-    // }
   }, []);
 
   return (

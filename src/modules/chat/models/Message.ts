@@ -7,6 +7,7 @@ export interface Message {
   createdAt?: Date;
   id?: string;
   date?: Date;
+  otherUserFcmToken?: string;
   subCollection?: string;
 }
 

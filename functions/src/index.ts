@@ -9,46 +9,36 @@ admin.initializeApp({
 
 const cors = require('cors')({ origin: 'http://localhost:3000' });
 
-exports.sendMessage = functions.https.onRequest((request, response) => {
-  cors(request, response, async () => {
-    response.header('Access-Control-Allow-Origin', '*');
-    console.log('Request body', request.body);
+exports.sendPushNotification = functions.https.onRequest(
+  (request, response) => {
+    cors(request, response, async () => {
+      response.header('Access-Control-Allow-Origin', '*');
+      console.log('Request body', request.body);
 
-    const payload = {
-      token: request.body.data.otherUserFcmToken,
-      notification: {
-        title: request.body.data.displayName,
-        body: request.body.data.text,
-      },
-      data: {
-        body: request.body.data.text,
-      },
-    };
-    console.log('sending payload cloud function', payload);
-    try {
-      // const subCollectionRef = await admin
-      //   .firestore()
-      //   .collection('messages')
-      //   .doc(request.body.data.subCollection)
-      //   .collection('messages')
-      //   .add({
-      //     createdAt: new Date(Date.now()),
-      //     text: request.body.data.text,
-      //     uid: request.body.data.uid,
-      //     to: request.body.data.to,
-      //   });
-
-      const res = await admin.messaging().send(payload);
-      response.send({
-        status: 200,
-        data: res,
-      });
-      console.log('Responseeee fcm', res);
-    } catch (error) {
-      console.log('errrocina', error);
-    }
-  });
-});
+      const payload = {
+        token: request.body.data.otherUserFcmToken,
+        notification: {
+          title: request.body.data.userName,
+          body: request.body.data.text,
+        },
+        data: {
+          body: request.body.data.text,
+        },
+      };
+      console.log('Push notification: ', payload);
+      try {
+        const res = await admin.messaging().send(payload);
+        response.send({
+          status: 200,
+          data: res,
+        });
+        console.log('Message ID: ', res);
+      } catch (error) {
+        console.log('errrocina', error);
+      }
+    });
+  },
+);
 
 // exports.createNewChatTest = functions.https.onRequest((request, response) => {
 //   cors(request, response, async () => {

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import classes from './style/MessageFooter.module.css';
 import { ReactComponent as Smiley } from 'assets/smiley.svg';
 import { ReactComponent as Buttons } from 'assets/imgupload.svg';
@@ -12,9 +11,7 @@ import {
 import { useEffect, useState } from 'react';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUser, updateUserChats } from 'modules/authentication';
-import { httpsCallable } from 'firebase/functions';
-import { functions } from 'modules/redux-store';
+import { selectUser } from 'modules/authentication';
 
 import { selectAllOtherUsers } from 'modules/users';
 
@@ -30,8 +27,6 @@ export const MessageFooter: React.FC<Props> = ({ uid }) => {
   const idOfChat = findIdOfChat(uid);
 
   const allOtherUsers = useSelector(selectAllOtherUsers);
-  const sendMessageTest = httpsCallable(functions, 'sendMessage');
-  const createNewChatTest = httpsCallable(functions, 'createNewChatTest');
 
   useEffect(() => {
     if (!idOfChat) {
@@ -45,31 +40,16 @@ export const MessageFooter: React.FC<Props> = ({ uid }) => {
 
   const sendMessage = async (event: React.FormEvent) => {
     event.preventDefault();
+    const otherUser = allOtherUsers.find((user) => user.uid === uid);
     const message: Message = {
       text: msg,
       to: uid,
       uid: auth.id,
       subCollection: idOfChat,
+      otherUserFcmToken: otherUser?.fcmToken,
+      userName: auth.displayName as string,
     };
-    const otherUserFcmTokenTest = allOtherUsers.find(
-      (user) => user.uid === uid,
-    );
-    console.log('Other user test', otherUserFcmTokenTest?.fcmToken);
-    const testMessage = {
-      text: msg,
-      to: uid,
-      uid: auth.id,
-      subCollection: idOfChat,
-      fcmToken: auth.fcmToken,
-      otherUserFcmToken: otherUserFcmTokenTest?.fcmToken,
-      displayName: auth.displayName,
-    };
-
-    console.log('Token test FCM', auth.fcmToken);
-    console.log('Test message frontend', testMessage);
-    sendMessageTest(testMessage).then((result) => {
-      console.log('Log', result.data);
-    });
+    dispatch(sendNewMessage(message));
     setMsg('');
   };
 

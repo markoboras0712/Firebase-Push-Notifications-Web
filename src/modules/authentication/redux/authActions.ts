@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { navigate } from '@reach/router';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
@@ -10,10 +9,8 @@ import {
   User,
 } from 'firebase/auth';
 import {
-  addDoc,
   collection,
   doc,
-  DocumentData,
   getDoc,
   getDocs,
   query,
@@ -94,7 +91,6 @@ export const signInWithGoogle = createAsyncThunk(
       const q = query(collection(db, 'users'), where('id', '==', user.uid));
       const querySnapshot = await getDocs(q);
       const fcmToken = await accessRegistrationToken();
-      console.log('RESULT', fcmToken);
 
       const authUser: AuthData = {
         email: user.email,
@@ -126,19 +122,17 @@ export const signUpWithEmailPassword = createAsyncThunk(
         email,
         password,
       );
-      accessRegistrationToken().then((result) => {
-        console.log('HERE', result);
-        dispatch(
-          addUserToFirestore({
-            displayName: `${firstName} ${lastName}`,
-            email,
-            id: response.user.uid,
-            activeChats: [],
-            photoUrl: photoUrl as string,
-            fcmToken: result,
-          }),
-        );
-      });
+      const fcmToken = await accessRegistrationToken();
+      dispatch(
+        addUserToFirestore({
+          displayName: `${firstName} ${lastName}`,
+          email,
+          id: response.user.uid,
+          activeChats: [],
+          photoUrl: photoUrl as string,
+          fcmToken: fcmToken,
+        }),
+      );
     } catch (error) {
       alert(error);
       throw new Error('Didng signup');
